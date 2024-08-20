@@ -17,6 +17,17 @@ Una vez realizado los pasos anteriores es importante conocer los siguientes coma
 - Ejecución y contrucción de la imagen de docker
  docker-compose up --build 
 
+
+- Si necesitas bajar los servicios o construirlo manualmente:
+ docker-compose down
+docker-compose build
+docker-compose up
+
+
+# Conexión a base de datos
+Necesitas crear la base de datos para que se pueda conectar correctamente
+
+# Acceder a la API
  Finalmente entramos en la siguiente ruta:
  http://localhost:3000,
 
@@ -24,6 +35,5 @@ Una vez realizado los pasos anteriores es importante conocer los siguientes coma
 - Si por algun motivo se necesita eliminar la imagen de docker se debe utilizar el siguiente comando:
 docker-compose down
 
-Eliminar caché
+# Eliminar caché
 npm cache clean --force
-

@@ -1,29 +1,26 @@
-# Utilizamos la última versión de node
-FROM node:latest
+# Utiliza la última versión de Node.js 20
+FROM node:20-alpine
 
-# Se establece el directorio de trabajo del contenedor
+# Establece el directorio de trabajo del contenedor
 WORKDIR /app
 
-# Copia el archivo package.json y package-lock.json si existe
-COPY /proyect/package*.json ./
+# Copia los archivos de dependencias al directorio de trabajo
+COPY package*.json ./
 
-# Descarga e instala todas las dependencias
+# Instala todas las dependencias de la aplicación
 RUN npm install
 
-# Instala Nodemon globalmente
-RUN npm install -g nodemon
 
-# Copia todos los archivos de la aplicación
-COPY /proyect/ ./
 
-# Copia el script wait-for-it.sh
-#COPY /proyect/bin/wait-for-it.sh ./
+# Copia el resto de los archivos de la aplicación al directorio de trabajo
+COPY . .
 
-# Da permisos de ejecución al script
-#RUN chmod +x wait-for-it.sh
-
-# Expone el puerto 3000 para la aplicación
+# Expone el puerto que la aplicación va a usar
 EXPOSE 3000
 
-# Comando para iniciar la aplicación usando Nodemon
-CMD ["npx", "nodemon", "index.js"]
+# Define el comando por defecto para ejecutar la aplicación en modo desarrollo usando el script `dev` definido en package.json
+CMD ["npm", "run", "dev"]
+
+
+
+

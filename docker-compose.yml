@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
   administrativo_backend:
-    build: 
-      context: . 
-    image: nueva_aplicacion_web
+    container_name: web_api
+    build:
+      context: . # Contexto para la construcción es el directorio 'admin'
+    image: node_js
     ports:
       - "3000:3000"
     volumes:
-      - .:/admin/proyect # Asegúrate de que el directorio actual contiene el package.json
-      - /admin/proyect/node_modules
+      - .:/app  # Este volumen puede sobrescribir node_modules si no se maneja bien
     depends_on:
       db:
         condition: service_healthy
@@ -17,10 +17,11 @@ services:
       - mired
 
   db:
+    container_name: mysql
     image: mysql:latest
     restart: always
     ports:
-      - "3306:3306"
+      - "3306:3306" 
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--user=alevi", "--password=alevi123"]
       interval: 30s
