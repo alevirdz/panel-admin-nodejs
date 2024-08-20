@@ -13,7 +13,7 @@ const app = express();
 
 // Configura rutas
 app.get('/', (req, res) => {
-    res.send('¡Hola, mundo!');
+    res.send('Success');
 });
 
 app.use('/api/clientes', clientes)

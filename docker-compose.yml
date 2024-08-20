@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  administrativo_backend:
+  node:
     container_name: web_api
     build:
-      context: . # Contexto para la construcción es el directorio 'admin'
-    image: node_js
+      context: . # Contexto para la construcción es el directorio
+    image: nodejs:20
     ports:
       - "3000:3000"
     volumes:
@@ -14,14 +14,14 @@ services:
       db:
         condition: service_healthy
     networks:
-      - mired
+      - environmentDev
 
   db:
     container_name: mysql
     image: mysql:latest
     restart: always
     ports:
-      - "3306:3306" 
+      - "3307:3306" 
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--user=alevi", "--password=alevi123"]
       interval: 30s
@@ -34,11 +34,12 @@ services:
       MYSQL_PASSWORD: alevi123
     volumes:
       - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - mired
+      - environmentDev
 
 volumes:
   db_data:
 
 networks:
-  mired:
+  environmentDev:

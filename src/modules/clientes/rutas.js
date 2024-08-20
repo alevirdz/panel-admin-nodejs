@@ -9,7 +9,7 @@ const router = express.Router();
 // Define una ruta que maneja la consulta a la base de datos
 router.get('/', (req, res) => {
     // Ejecuta una consulta
-    db.query('SELECT * FROM users', (err, results) => {
+    db.query('SELECT * FROM Users', (err, results) => {
         if (err) {
             console.error('Error al ejecutar la consulta:', err.stack);
             respuesta.error(req, res, 'Error al ejecutar la consulta', 500);

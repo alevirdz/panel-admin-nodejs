@@ -37,3 +37,7 @@ docker-compose down
 
 # Eliminar caché
 npm cache clean --force
+
+
+# comprobar desde Docker la BD
+mysql -u alevi -p
