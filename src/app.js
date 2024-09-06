@@ -1,6 +1,7 @@
 const express = require('express');
 const config = require('./config.js');
 const verifyToken = require('./middlewares/authMiddleware');
+const checkPermissions = require('./middlewares/checkPermissions');
 const app = express();
 
 app.set('port', config.app.port);
@@ -25,6 +26,6 @@ app.use('/api/auth', userAuth);
 
 //Middleware 
 app.use('/api/usuario', verifyToken, userController);
-app.use('/api/productos', verifyToken, productController);
+app.use('/api/productos', verifyToken, checkPermissions('edit_post'), productController);
 
 module.exports = app;
