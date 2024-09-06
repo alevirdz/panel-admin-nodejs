@@ -3,10 +3,10 @@ const dotenv = require ('dotenv');
 dotenv.config();
 
 
-const connection = new Sequelize('app', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
-  port: '3306',
+const connection = new Sequelize(process.env.DATABASE, 'root', 'root_', {
+  host: process.env.HOST,
+  dialect:  process.env.MOTOR,
+  port: process.env.DB_PORT,
   logging: false
 });
 
