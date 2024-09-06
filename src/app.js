@@ -1,24 +1,30 @@
-// app.js
 const express = require('express');
 const config = require('./config.js');
-
-
-const clientes = require('./modules/clientes/rutas.js')
-
+const verifyToken = require('./middlewares/authMiddleware');
 const app = express();
 
-// Configura middleware
-//app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.set('port', config.app.port);
+app.use(express.json());
 
-// Configura rutas
-app.get('/', (req, res) => {
-    res.send('Success');
+//Callback Controllers
+const userAuth = require('./routes/auth.routes')
+const userController = require('./routes/user.routes');
+const productController = require('./routes/product.routes');
+
+// Without Auth
+app.get('/info', (req, res) => {
+    res.json({ message: 'Consulta información que puede ser publica, img, text' });
 });
 
-app.use('/api/clientes', clientes)
 
-// Configura el puerto en la aplicación Express
-app.set('port', config.app.port);
+//Authentication
+app.use('/api/auth', userAuth);
+
+
+
+
+//Middleware 
+app.use('/api/usuario', verifyToken, userController);
+app.use('/api/productos', verifyToken, productController);
 
 module.exports = app;

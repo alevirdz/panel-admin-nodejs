@@ -41,3 +41,8 @@ npm cache clean --force
 
 # comprobar desde Docker la BD
 mysql -u alevi -p
+
+
+
+# Requisitos del sistema
+Node 20.11.0
