@@ -2,7 +2,6 @@ const respuesta = require('../red/respuestas');
 
 exports.index = (req, res) => {
     try {
-        
         // Respuesta exitosa
         respuesta.success(req, res, 'Delegado del index', 200);
     } catch (err) {

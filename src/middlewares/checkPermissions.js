@@ -1,11 +1,41 @@
 const { getUserPermissions } = require('../services/permissionService');
 
-const checkPermissions = (requiredPermission) => async (req, res, next) => {
+// const checkrol = (requiredPermission) => async (req, res, next) => {
+//     try {
+//         console.log(req.body)
+//         console.log(req.user)
+//         const userPermissions = await getUserPermissions(req.user.id);
+//         console.log("permiso que tiene: " +userPermissions);
+//         console.log('se requiere: ' + requiredPermission);
+//         if (userPermissions == requiredPermission) {
+//             next();
+//         } else {
+//             res.status(403).json({ message: 'Forbidden' });
+//         }
+//     } catch (err) {
+//         console.error('Error checking permissions:', err);
+//         res.status(500).json({ message: 'Internal Server Error' });
+//     }
+// };
+
+const checkrol = (allowedRoles) => async (req, res, next) => {
     try {
+        // Verifica que req.user esté presente
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({ message: 'No autenticado' });
+        }
+
+        // Obtiene los permisos del usuario desde el servicio
         const userPermissions = await getUserPermissions(req.user.id);
-        console.log("permiso que tiene: " +userPermissions);
-        console.log('se requiere: ' + requiredPermission);
-        if (userPermissions == requiredPermission) {
+
+        // Verifica que userPermissions sea un array
+        if (!Array.isArray(userPermissions)) {
+            console.error('Permisos del usuario no son un array:', userPermissions);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        // Verifica si el rol del usuario está en los roles permitidos
+        if (allowedRoles.some(role => userPermissions.includes(role))) {
             next();
         } else {
             res.status(403).json({ message: 'Forbidden' });
@@ -17,4 +47,4 @@ const checkPermissions = (requiredPermission) => async (req, res, next) => {
 };
 
 
-module.exports = checkPermissions;
+module.exports = checkrol;
