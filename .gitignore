@@ -14,4 +14,4 @@ build/Release
 
 
 #No setting BD for now
-/Users/alevirodriguez/Documents/www/panel-admin-nodejs/src/DB/mysql.js
+/src/DB/mysql.js

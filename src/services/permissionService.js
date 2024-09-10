@@ -1,4 +1,4 @@
-const respuesta = require('../red/respuestas');
+const response = require('../red/responses');
 const Account = require('../models/Account.model');
 const Role = require('../models/Role.model');
 const Permission = require('../models/Permission.model');

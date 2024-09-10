@@ -17,7 +17,7 @@ const galleryController = require('./routes/gallery.routes');
 app.get('/info', (req, res) => {
     res.json({ message: 'Consulta información que puede ser publica, img, text' });
 });
-
+// app.use('/api/reservation', reservationController);
 
 //Authentication
 app.use('/api/auth', userAuth);

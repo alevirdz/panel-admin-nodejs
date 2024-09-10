@@ -1,10 +1,10 @@
-const respuesta = require('../red/respuestas');
+const response = require('../red/responses');
 const Product = require('../models/Products.model'); // Asegúrate de que la ruta y el nombre del modelo sean correctos
 
 exports.index = (req, res) => {
     try {
-        // Respuesta exitosa
-        respuesta.success(req, res, 'Bienvenido al index', 200); // Ajusté el mensaje para que sea más genérico
+        // response exitosa
+        response.success(req, res, 'Bienvenido al index', 200); // Ajusté el mensaje para que sea más genérico
     } catch (err) {
         console.error('Error en index:', err);
         res.status(500).json({ message: 'Error interno del servidor' });
@@ -17,20 +17,20 @@ exports.getProductById = async (req, res) => {
         console.log(id);
 
         if (!id) {
-            return respuesta.error(req, res, 'No se proporcionó el campo: ID', 400);
+            return response.error(req, res, 'No se proporcionó el campo: ID', 400);
         }
 
         const product = await Product.findByPk(id);
 
         if (!product) {
-            return respuesta.error(req, res, 'Producto no encontrado', 404);
+            return response.error(req, res, 'Producto no encontrado', 404);
         }
 
-        respuesta.success(req, res, { product }, 200);
+        response.success(req, res, { product }, 200);
 
     } catch (err) {
         console.error('Error en getProductById:', err);
-        return respuesta.error(req, res, 'Ocurrió un problema en el servidor', 500);
+        return response.error(req, res, 'Ocurrió un problema en el servidor', 500);
     }
 };
 
@@ -50,7 +50,7 @@ exports.addCatalogo = async (req, res) => {
 
         // Verifica si se enviaron los campos necesarios
         if (!name || !description || !quantity || !price) {
-            return respuesta.error(req, res, 'Faltan campos requeridos: Los datos no están completos', 400);
+            return response.error(req, res, 'Faltan campos requeridos: Los datos no están completos', 400);
         }
 
         // Crea un nuevo producto en la base de datos
@@ -61,8 +61,8 @@ exports.addCatalogo = async (req, res) => {
             price
         });
 
-        // Respuesta exitosa
-        respuesta.success(req, res, 'Producto creado exitosamente', 201);
+        // response exitosa
+        response.success(req, res, 'Producto creado exitosamente', 201);
 
     } catch (err) {
         console.error('Error en register:', err);
@@ -76,7 +76,7 @@ exports.deleteCatalogo = async (req, res) => {
 
         // Verifica si el ID del producto está presente
         if (!catalogoId) {
-            return respuesta.error(req, res, 'ID del producto no proporcionado', 400);
+            return response.error(req, res, 'ID del producto no proporcionado', 400);
         }
 
         // Elimina el producto con el ID especificado

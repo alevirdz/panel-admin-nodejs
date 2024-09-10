@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 const dotenv = require ('dotenv');
 dotenv.config();
 
-const connection = new Sequelize(process.env.DATABASE, 'root', 'root_', {
+const connection = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PWD, {
   host: process.env.HOST,
   dialect:  process.env.MOTOR,
   port: process.env.DB_PORT,

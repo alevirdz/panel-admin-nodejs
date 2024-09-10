@@ -167,6 +167,32 @@ CREATE TABLE gallery (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- --------------------------------------------------------
+-- Reservations
+-- --------------------------------------------------------
+
+CREATE TABLE reservations (
+    reservation_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_name VARCHAR(100) NOT NULL,
+    customer_email VARCHAR(100) NOT NULL UNIQUE,
+    customer_phone VARCHAR(20),
+    reservation_date DATE NOT NULL,
+    reservation_time TIME NOT NULL,
+    number_of_guests INT NOT NULL CHECK (number_of_guests > 0),
+    special_requests TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status ENUM('Pending', 'Confirmed', 'Cancelled') DEFAULT 'Pending',
+    FOREIGN KEY (customer_email) REFERENCES Customers(email) ON DELETE SET NULL
+);
+
+CREATE TABLE customers_booker (
+    email VARCHAR(100) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    address TEXT
+);
+
 
 -- --------------------------------------------------------
 -- Committing changes

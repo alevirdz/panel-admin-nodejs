@@ -1,6 +1,6 @@
-const respuesta = require('../red/respuestas');
+const response = require('../red/responses');
 const index  = (req, res)=>{
-    respuesta.success(req, res, 'Todo bien en index', 200)
+    response.success(req, res, 'Todo bien en index', 200)
 };
 
 module.exports = { index,}
