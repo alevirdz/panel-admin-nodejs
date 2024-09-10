@@ -5,6 +5,7 @@ const productController = require('../controllers/product.controller');
 router.post('/', productController.index);
 
 //To CRUD
+router.get('/catalogo/:id', productController.getProductById);
 router.get('/catalogo', productController.getCatalogo);
 router.post('/agregarCatalogo', productController.addCatalogo);
 router.delete('/eliminarCatalogo/:id', productController.deleteCatalogo);

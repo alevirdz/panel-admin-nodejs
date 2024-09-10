@@ -136,6 +136,38 @@ INSERT INTO `accounts_roles` (user_id, role_id) VALUES
 ((SELECT id FROM accounts WHERE email = 'alevi@example.com'), (SELECT id FROM roles WHERE name = 'Admin')),
 ((SELECT id FROM accounts WHERE email = 'isaac@example.com'), (SELECT id FROM roles WHERE name = 'Editor'));
 
+
+
+
+
+
+-- --------------------------------------------------------
+-- Product
+-- --------------------------------------------------------
+CREATE TABLE product (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- --------------------------------------------------------
+-- Gallery
+-- --------------------------------------------------------
+CREATE TABLE gallery (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    url VARCHAR(255),
+    path VARCHAR(255),
+    description TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
 -- --------------------------------------------------------
 -- Committing changes
 -- --------------------------------------------------------
