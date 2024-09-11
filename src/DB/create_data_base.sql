@@ -170,28 +170,29 @@ CREATE TABLE gallery (
 -- --------------------------------------------------------
 -- Reservations
 -- --------------------------------------------------------
-
-CREATE TABLE reservations (
-    reservation_id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_name VARCHAR(100) NOT NULL,
-    customer_email VARCHAR(100) NOT NULL UNIQUE,
-    customer_phone VARCHAR(20),
-    reservation_date DATE NOT NULL,
-    reservation_time TIME NOT NULL,
-    number_of_guests INT NOT NULL CHECK (number_of_guests > 0),
-    special_requests TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    status ENUM('Pending', 'Confirmed', 'Cancelled') DEFAULT 'Pending',
-    FOREIGN KEY (customer_email) REFERENCES Customers(email) ON DELETE SET NULL
-);
-
 CREATE TABLE customers_booker (
     email VARCHAR(100) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     phone VARCHAR(20),
-    address TEXT
+    address TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE reservations (
+    reservation_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_email VARCHAR(100),
+    check_in_date DATE NOT NULL,
+    check_out_date DATE NOT NULL,
+    number_of_guests INT NOT NULL,
+    special_requests TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status ENUM('Pending', 'Confirmed', 'Cancelled') DEFAULT 'Pending',
+    FOREIGN KEY (customer_email) REFERENCES customers_booker(email) ON DELETE SET NULL,
+    UNIQUE (check_in_date, check_out_date, customer_email)
+);
+
 
 
 -- --------------------------------------------------------
