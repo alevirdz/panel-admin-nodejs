@@ -1,11 +1,19 @@
 const express = require('express');
-const config = require('./config.js');
+const dotenv = require ('dotenv');
+const cors = require('cors');
 const verifyToken = require('./middlewares/authMiddleware');
 const checkrol = require('./middlewares/checkRol');
-const app = express();
+dotenv.config();
 
-app.set('port', config.app.port);
+
+const app = express();
+app.set('port', process.env.PORT);
 app.use(express.json());
+app.use(cors({
+  origin: process.env.ORIGIN,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+}));
 
 //Callback Controllers
 const userAuth = require('./routes/auth.routes')
@@ -14,11 +22,13 @@ const productController = require('./routes/product.routes');
 const galleryController = require('./routes/gallery.routes');
 const reservationController = require('./routes/resevation.routes');
 
+
 // Without Auth
 app.get('/info', (req, res) => {
     res.json({ message: 'Consulta información que puede ser publica, img, text' });
 });
 app.use('/api/reservation', reservationController);
+
 
 //Authentication
 app.use('/api/auth', userAuth);
