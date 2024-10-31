@@ -137,6 +137,44 @@ INSERT INTO `accounts_roles` (user_id, role_id) VALUES
 ((SELECT id FROM accounts WHERE email = 'isaac@example.com'), (SELECT id FROM roles WHERE name = 'Editor'));
 
 
+-- Tokens
+CREATE TABLE IF NOT EXISTS `token` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `token` VARCHAR(255) NOT NULL,
+  `revoked` BOOLEAN DEFAULT FALSE,
+  `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `revokedAt` TIMESTAMP NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `accounts`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB 
+  DEFAULT CHARSET=utf8mb4 
+  COLLATE=utf8mb4_general_ci;
+
+
+-- Themes
+CREATE TABLE themes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    background VARCHAR(255) NOT NULL,
+    colorText VARCHAR(30) NOT NULL,
+    colorIco VARCHAR(30) NOT NULL,
+    hoverBackground VARCHAR(30) NOT NULL,
+    backgroundItemActive VARCHAR(30) NOT NULL,
+    colorTextAndIcoActive VARCHAR(30) NOT NULL,
+    isImage BOOLEAN DEFAULT FALSE,
+    backgroundImageCoverEffect VARCHAR(255)
+);
+
+INSERT INTO themes (name, background, colorText, colorIco, hoverBackground, backgroundItemActive, colorTextAndIcoActive, isImage, backgroundImageCoverEffect) VALUES
+('green', '#00695C', '#ffffff', '#ffffff', '#8cab91c9', '#11554a', '#ffffff', FALSE, NULL),
+('profesional', '#e6e6f1', '#262824', '#262824', '#f2f2f2', '#adadad', '#262824', FALSE, NULL),
+('oficial', '#ffffff', '#262824', '#262824', '#f2f2f2', '#edf6ff', '#144ec1', FALSE, NULL),
+('alevi', '#140d25', '#f4f6f8', '#f4f6f8', '#2b2143', '#d9d8f8', '#144ec1', FALSE, NULL),
+('especial', 'background_default.jpg', '#f4f6f8', '#f4f6f8', '#c9eeff5c', '#c9eeff5c', '#f4f6f8', TRUE, 'rgb(32 32 32 / 50%)');
+
+
+
 
 
 
@@ -192,7 +230,6 @@ CREATE TABLE reservations (
     FOREIGN KEY (customer_email) REFERENCES customers_booker(email) ON DELETE SET NULL,
     UNIQUE (check_in_date, check_out_date, customer_email)
 );
-
 
 
 -- --------------------------------------------------------
