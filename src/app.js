@@ -16,31 +16,30 @@ app.use(cors({
 }));
 
 //Callback Controllers
-const userAuth = require('./routes/auth.routes')
-const userController = require('./routes/user.routes');
-const productController = require('./routes/product.routes');
-const galleryController = require('./routes/gallery.routes');
-const reservationController = require('./routes/resevation.routes');
-
+const authRoutes = require('./routes/auth.routes');
+const userRoutes = require('./routes/user.routes');
+const productRoutes = require('./routes/product.routes');
+const galleryRoutes = require('./routes/gallery.routes');
+const reservationRoutes = require('./routes/reservation.routes');
 
 // Without Auth
 app.get('/info', (req, res) => {
     res.json({ message: 'Consulta información que puede ser publica, img, text' });
 });
-app.use('/api/reservation', reservationController);
+app.use('/api/reservation', reservationRoutes);
 
 
 //Authentication
-app.use('/api/auth', userAuth);
+app.use('/api/auth', authRoutes);
 
 
 
 
 //Middleware 
-app.use('/api/usuario', verifyToken, userController);
-// app.use('/api/productos', verifyToken, checkrol('Master'), productController);
-app.use('/api/productos', verifyToken, productController);
-app.use('/api/gallery', verifyToken, galleryController);
-app.use('/auth/reservation', verifyToken, reservationController);
+app.use('/api/usuario', verifyToken, userRoutes);
+// app.use('/api/productos', verifyToken, checkrol('Master'), productRoutes);
+app.use('/api/productos', verifyToken, productRoutes);
+app.use('/api/gallery', verifyToken, galleryRoutes);
+app.use('/auth/reservation', verifyToken, reservationRoutes);
 
 module.exports = app;

@@ -1,4 +1,4 @@
-const response = require('../red/responses');
+const response = require('../HTTP/responses');
 const Reservation = require('../models/Reservation.model');
 const CustomerBooker = require('../models/CustomerBooker.model');
 
