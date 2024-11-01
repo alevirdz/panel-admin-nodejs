@@ -173,6 +173,15 @@ INSERT INTO themes (name, background, colorText, colorIco, hoverBackground, back
 ('alevi', '#140d25', '#f4f6f8', '#f4f6f8', '#2b2143', '#d9d8f8', '#144ec1', FALSE, NULL),
 ('especial', 'background_default.jpg', '#f4f6f8', '#f4f6f8', '#c9eeff5c', '#c9eeff5c', '#f4f6f8', TRUE, 'rgb(32 32 32 / 50%)');
 
+-- Logs
+CREATE TABLE logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    method VARCHAR(255) NOT NULL,
+    message VARCHAR(255) NOT NULL,
+    statusCode INT NOT NULL,
+    stackTrace TEXT,
+    createdAt DATETIME NOT NULL
+);
 
 
 

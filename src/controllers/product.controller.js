@@ -1,4 +1,4 @@
-const response = require('../HTTP/responses');
+const response = require('../util/responses');
 const Product = require('../models/Products.model'); // Asegúrate de que la ruta y el nombre del modelo sean correctos
 
 exports.index = (req, res) => {

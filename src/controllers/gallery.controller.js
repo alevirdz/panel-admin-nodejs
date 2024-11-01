@@ -1,4 +1,4 @@
-const response = require('../HTTP/responses');
+const response = require('../util/responses');
 const Gallery = require('../models/Gallery.model');
 
 

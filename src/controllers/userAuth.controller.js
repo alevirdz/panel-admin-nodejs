@@ -1,31 +1,31 @@
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
-const response = require('../HTTP/responses');
+const response = require('../util/responses');
 const UserModel = require('../models/User.model');
 const RevokedToken = require('../models/RevokedToken.model');
+const { logError } = require('../controllers/core/LogsError.controller');
 dotenv.config();
-
 
 exports.signin = async (req, res) => {
     try {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return response.error(req, res, 'Campos incompletos', 400);
+            throw new Error('Campos incompletos');
         }
 
         const authenticatedUser = await UserModel.findOne({ where: { email } });
         if (!authenticatedUser) {
-            return response.error(req, res, 'El usuario no existe', 404);
+            throw new Error('El usuario no existe');
         }
 
         const isPasswordValid = await bcrypt.compare(password, authenticatedUser.password);
         if (!isPasswordValid) {
-            return response.error(req, res, 'Usuario o contraseña invalido', 401);
+            throw new Error('Usuario o contraseña inválido');
         }
 
-
+        //Puede ser una herramienta de generador de token
         const token = jwt.sign(
             {
                 id: authenticatedUser.id,
@@ -45,25 +45,25 @@ exports.signin = async (req, res) => {
         }).then(() => {
             return response.success(req, res, { token: token }, 200);
         }).catch(err => {
-            console.error('Error al guardar el token:', err.message);
-            return response.error(req, res, 'Ocurrio al iniciar sesión', 500);
+            throw new Error('Ocurrio un problema en revocar el token');
         });
-        
+
     } catch (err) {
-        return response.error(req, res, 'Ocurrio un error en el servidor en el metodo signin', 500);
+        const statusCode = err.status || 500;
+        await logError('signin', err.message, statusCode, err.stack);
+        return response.error(req, res, err.message || 'Ocurrió un error en el servidor', statusCode);
     }
 };
 
-// Cierre de sesión
 exports.logout = async (req, res) => {
-  
+
     const token = req.headers['authorization']?.split(' ')[1];
-
-    if (!token) {
-        return response.error(req, res, 'Token no proporcionado', 403);
-    }
-
     try {
+
+        if (!token) {
+            throw new Error('Token no proporcionado');
+        }
+
         await RevokedToken.update(
             { revoked: true, revokedAt: new Date() },
             { where: { token: token } }
@@ -71,41 +71,40 @@ exports.logout = async (req, res) => {
 
         return response.success(req, res, 'OK', 200);
     } catch (err) {
-        return response.error(req, res, 'Error al cerrar sesión en el metodo logout', 500);
+        const statusCode = err.status || 500;
+        await logError('logout', err.message, statusCode, err.stack);
+        return response.error(req, res, err.message || 'Error al cerrar sesión en el metodo logout', statusCode);
     }
 };
-
-
-
 
 exports.register = async (req, res) => {
     try {
         const { firstName, lastName, email, password } = req.body;
 
         if (!firstName || !lastName || !email || !password) {
-            return response.error(req, res, 'Los datos no estan completos', 400);
+            throw new Error('Los datos no estan completos');
         }
 
         const existingUser = await UserModel.findOne({ where: { email } });
         if (existingUser) {
-            return response.error(req, res, 'El nombre de usuario ya está en uso', 409);
+            throw new Error('El nombre de usuario ya está en uso');
         }
 
-        // Hash
+        // Hash puede ser una herramienta
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const newUser = await UserModel.create({
+        await UserModel.create({
             firstName,
             lastName,
             email,
             password: hashedPassword
         });
-
-        response.success(req, res, 'Usuario creado exitosamente', 201);
+        return response.success(req, res, 'Usuario creado exitosamente', 201);
 
     } catch (err) {
-        console.error('Error en createUser:', err);
-        res.status(500).json({ message: 'Error interno del servidor del metodo register' });
+        const statusCode = err.status || 500;
+        await logError('register', err.message, statusCode, err.stack);
+        return response.error(req, res, err.message || 'Ocurrio un error al intentar crear al usuario', statusCode);
     }
 };
