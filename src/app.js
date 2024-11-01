@@ -1,8 +1,8 @@
 const express = require('express');
 const dotenv = require ('dotenv');
 const cors = require('cors');
-const verifyToken = require('./middlewares/authMiddleware');
-const checkrol = require('./middlewares/checkRol');
+const verifyToken = require('./core/middleware/authMiddleware');
+const checkrol = require('./core/middleware/checkRol');
 dotenv.config();
 
 

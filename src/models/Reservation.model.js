@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
-const connection = require('../DB/mysql'); // Ajusta la ruta según tu estructura
-const CustomerBooker = require('./CustomerBooker.model'); // Ajusta la ruta según tu estructura
+const connection = require('../core/database/mysql');
+const CustomerBooker = require('./CustomerBooker.model');
 
 const Reservation = connection.define('reservation', {
     reservation_id: {
@@ -15,7 +15,7 @@ const Reservation = connection.define('reservation', {
             model: 'customers_booker',
             key: 'email'
         },
-        onDelete: 'CASCADE' // Elimina reservas si el cliente asociado es eliminado
+        onDelete: 'CASCADE' // Capaz de eliminar en cascada lo que este relacionado
     },
     check_in_date: {
         type: DataTypes.DATE,

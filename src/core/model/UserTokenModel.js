@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const connection = require('../DB/mysql');
+const connection = require('../database/mysql');
 
 const RevokedToken = connection.define('RevokedToken', {
     id: {

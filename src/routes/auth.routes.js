@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userAuthController = require('../controllers/userAuth.controller');
+const userAuthController = require('../core/guard/userAuthController');
 
 router.post('/signin', userAuthController.signin);
 router.post('/logout', userAuthController.logout);

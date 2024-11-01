@@ -1,10 +1,12 @@
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
-const response = require('../util/responses');
-const UserModel = require('../models/User.model');
-const RevokedToken = require('../models/RevokedToken.model');
-const { logError } = require('../controllers/core/LogsError.controller');
+const response = require('../../util/responses');
+const UserModel = require('../../models/User.model');
+const RevokedToken = require('../model/UserTokenModel');
+
+
+const { logError } = require('../logs/LogsError.controller');
 dotenv.config();
 
 exports.signin = async (req, res) => {
@@ -15,16 +17,32 @@ exports.signin = async (req, res) => {
             throw new Error('Campos incompletos');
         }
 
-        const authenticatedUser = await UserModel.findOne({ where: { email } });
-        if (!authenticatedUser) {
-            throw new Error('El usuario no existe');
-        }
+        // const authenticatedUser = await UserModel.findOne({ where: { email } });
+        // if (!authenticatedUser) {
+        //     throw new Error('El usuario no existe');
+        // }
+        const authenticatedUser = await UserModel.findOne({
+            where: { email },
+            include: [{
+                model: Role,
+                through: {
+                    attributes: [], // Opcional: omitir atributos intermedios
+                },
+                include: {
+                    model: Permission,
+                    through: {
+                        attributes: [], // Opcional: omitir atributos intermedios
+                    },
+                },
+            }],
+        });
 
         const isPasswordValid = await bcrypt.compare(password, authenticatedUser.password);
         if (!isPasswordValid) {
             throw new Error('Usuario o contraseña inválido');
         }
 
+        console.log(authenticatedUser)
         //Puede ser una herramienta de generador de token
         const token = jwt.sign(
             {

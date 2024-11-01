@@ -1,22 +1,4 @@
-const { getUserPermissions } = require('../services/permissionService');
-
-// const checkrol = (requiredPermission) => async (req, res, next) => {
-//     try {
-//         console.log(req.body)
-//         console.log(req.user)
-//         const userPermissions = await getUserPermissions(req.user.id);
-//         console.log("permiso que tiene: " +userPermissions);
-//         console.log('se requiere: ' + requiredPermission);
-//         if (userPermissions == requiredPermission) {
-//             next();
-//         } else {
-//             res.status(403).json({ message: 'Forbidden' });
-//         }
-//     } catch (err) {
-//         console.error('Error checking permissions:', err);
-//         res.status(500).json({ message: 'Internal Server Error' });
-//     }
-// };
+const { getUserPermissions } = require('../controllers/PermissionController');
 
 const checkrol = (allowedRoles) => async (req, res, next) => {
     try {

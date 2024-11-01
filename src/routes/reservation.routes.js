@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const reservationController = require('../controllers/reservation.controller');
-const verifyToken = require('../middlewares/authMiddleware');
+const verifyToken = require('../core/middleware/authMiddleware');
 
 router.post('/', reservationController.index);
 
