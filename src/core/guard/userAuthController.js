@@ -1,13 +1,10 @@
-const bcrypt = require('bcrypt');
-const dotenv = require('dotenv');
-const jwt = require('jsonwebtoken');
+
+const UserModel = require('../model/UserCreateAccountModel');
+const Role = require('../model/RolesModel');
+const { generateToken, tokenCreated, tokenUpdated } = require('../controllers/TokenController');
+const { hashing, comparePassword } = require('../../util/Hashing');
 const response = require('../../util/responses');
-const UserModel = require('../../models/User.model');
-const RevokedToken = require('../model/UserTokenModel');
-
-
 const { logError } = require('../logs/LogsError.controller');
-dotenv.config();
 
 exports.signin = async (req, res) => {
     try {
@@ -17,54 +14,33 @@ exports.signin = async (req, res) => {
             throw new Error('Campos incompletos');
         }
 
-        // const authenticatedUser = await UserModel.findOne({ where: { email } });
-        // if (!authenticatedUser) {
-        //     throw new Error('El usuario no existe');
-        // }
         const authenticatedUser = await UserModel.findOne({
             where: { email },
             include: [{
                 model: Role,
                 through: {
-                    attributes: [], // Opcional: omitir atributos intermedios
-                },
-                include: {
-                    model: Permission,
-                    through: {
-                        attributes: [], // Opcional: omitir atributos intermedios
-                    },
+                    attributes: [],
                 },
             }],
         });
 
-        const isPasswordValid = await bcrypt.compare(password, authenticatedUser.password);
+        const isPasswordValid = await comparePassword(password, authenticatedUser.password);
         if (!isPasswordValid) {
             throw new Error('Usuario o contraseña inválido');
-        }
+        };
 
-        console.log(authenticatedUser)
-        //Puede ser una herramienta de generador de token
-        const token = jwt.sign(
-            {
-                id: authenticatedUser.id,
-                firstName: authenticatedUser.firstName,
-                lastName: authenticatedUser.lastName,
-                email: authenticatedUser.email
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRATION }
-        );
+        const payload = {
+            id: authenticatedUser.id,
+            name: authenticatedUser.firstName,
+            lastName: authenticatedUser.lastName,
+            email: authenticatedUser.email,
+            role: authenticatedUser.Roles[0]?.name
+        };
 
-        await RevokedToken.create({
-            user_id: authenticatedUser.id,
-            token: token,
-            revoked: false,
-            createdAt: new Date()
-        }).then(() => {
-            return response.success(req, res, { token: token }, 200);
-        }).catch(err => {
-            throw new Error('Ocurrio un problema en revocar el token');
-        });
+        const token = generateToken(payload);
+
+        await tokenCreated(authenticatedUser.id, token);
+        return response.success(req, res, { token: token }, 200);
 
     } catch (err) {
         const statusCode = err.status || 500;
@@ -82,10 +58,7 @@ exports.logout = async (req, res) => {
             throw new Error('Token no proporcionado');
         }
 
-        await RevokedToken.update(
-            { revoked: true, revokedAt: new Date() },
-            { where: { token: token } }
-        );
+        await tokenUpdated(token);
 
         return response.success(req, res, 'OK', 200);
     } catch (err) {
@@ -108,9 +81,7 @@ exports.register = async (req, res) => {
             throw new Error('El nombre de usuario ya está en uso');
         }
 
-        // Hash puede ser una herramienta
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const hashedPassword = await hashing(password);
 
         await UserModel.create({
             firstName,
@@ -118,6 +89,7 @@ exports.register = async (req, res) => {
             email,
             password: hashedPassword
         });
+
         return response.success(req, res, 'Usuario creado exitosamente', 201);
 
     } catch (err) {

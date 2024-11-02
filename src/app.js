@@ -3,6 +3,7 @@ const dotenv = require ('dotenv');
 const cors = require('cors');
 const verifyToken = require('./core/middleware/authMiddleware');
 const checkrol = require('./core/middleware/checkRol');
+const PasswordRecoveryController = require('./core/controllers/PasswordRecoveryController');
 dotenv.config();
 
 
@@ -31,6 +32,8 @@ app.use('/api/reservation', reservationRoutes);
 
 //Authentication
 app.use('/api/auth', authRoutes);
+app.use('/api/recover-password', authRoutes);
+
 
 
 

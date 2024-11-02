@@ -18,7 +18,7 @@ const AccountRole = connection.define('AccountRole', {
     }
 }, {
     tableName: 'accounts_roles',
-    timestamps: false
+    timestamps: false,
 });
 
 module.exports = AccountRole;

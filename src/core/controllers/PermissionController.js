@@ -23,6 +23,4 @@ const getUserPermissions = async (userId) => {
     }
 };
 
-module.exports = {
-    getUserPermissions
-};
+module.exports = { getUserPermissions };

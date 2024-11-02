@@ -1,10 +1,9 @@
 const response = require('../util/responses');
-const Product = require('../models/Products.model'); // Asegúrate de que la ruta y el nombre del modelo sean correctos
+const Product = require('../models/Products.model');
 
 exports.index = (req, res) => {
     try {
-        // response exitosa
-        response.success(req, res, 'Bienvenido al index', 200); // Ajusté el mensaje para que sea más genérico
+        response.success(req, res, 'Bienvenido al index', 200);
     } catch (err) {
         console.error('Error en index:', err);
         res.status(500).json({ message: 'Error interno del servidor' });
@@ -36,7 +35,7 @@ exports.getProductById = async (req, res) => {
 
 exports.getCatalogo = async (req, res) => {
     try {
-        const products = await Product.findAll(); // Asegúrate de que Product esté importado
+        const products = await Product.findAll();
         res.status(200).json(products);
     } catch (err) {
         console.error('Error en getCatalogo:', err);
@@ -48,12 +47,10 @@ exports.addCatalogo = async (req, res) => {
     try {
         const { name, description, quantity, price } = req.body;
 
-        // Verifica si se enviaron los campos necesarios
         if (!name || !description || !quantity || !price) {
             return response.error(req, res, 'Faltan campos requeridos: Los datos no están completos', 400);
         }
 
-        // Crea un nuevo producto en la base de datos
         const newProduct = await Product.create({
             name,
             description,
@@ -61,7 +58,6 @@ exports.addCatalogo = async (req, res) => {
             price
         });
 
-        // response exitosa
         response.success(req, res, 'Producto creado exitosamente', 201);
 
     } catch (err) {
@@ -74,12 +70,10 @@ exports.deleteCatalogo = async (req, res) => {
     try {
         const catalogoId = req.params.id;
 
-        // Verifica si el ID del producto está presente
         if (!catalogoId) {
             return response.error(req, res, 'ID del producto no proporcionado', 400);
         }
 
-        // Elimina el producto con el ID especificado
         const deleted = await Product.destroy({ where: { id: catalogoId } });
 
         if (deleted) {

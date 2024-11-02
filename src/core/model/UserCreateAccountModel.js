@@ -1,40 +1,35 @@
 const { DataTypes } = require('sequelize');
 const connection = require('../database/mysql');
+const Role = require('../model/RolesModel');
 
-const Account = connection.define('Account', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
+const Usuario = connection.define('accounts', {
     firstName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
     lastName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
-    createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        onUpdate: DataTypes.NOW
-    }
 }, {
-    tableName: 'accounts'
+    timestamps: true,
 });
 
-module.exports = Account;
+// Asociaciones
+Usuario.belongsToMany(Role, {
+    through: 'accounts_roles',
+    foreignKey: 'user_id',
+    otherKey: 'role_id',
+    timestamps: false,
+});
+
+module.exports = Usuario;

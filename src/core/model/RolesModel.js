@@ -16,7 +16,8 @@ const Role = connection.define('Role', {
         type: DataTypes.TEXT
     }
 }, {
-    tableName: 'roles'
+    tableName: 'roles',
+    timestamps: false,
 });
 
 module.exports = Role;
