@@ -4,8 +4,9 @@ const UserAccountController = require('../core/controllers/UserAccountController
 
 
 router.get('/user/:id', UserAccountController.userAccountById);
-router.post('/update', UserAccountController.updateUser);
-router.post('/delete', UserAccountController.deleteUser);
+router.post('/create', UserAccountController.createAccountUser);
+router.post('/update', UserAccountController.updateAccountUser);
+router.post('/delete', UserAccountController.deleteAccountUser);
 router.get('/all', UserAccountController.allAccounts);
 
 module.exports = router;

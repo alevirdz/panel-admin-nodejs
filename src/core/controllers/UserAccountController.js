@@ -1,7 +1,38 @@
-const bcrypt = require('bcrypt');
-const Usuario = require('../model/UserAccountModel');
+const UserModel = require('../model/UserAccountModel');
 const response = require('../../util/responses');
+const { hashing } = require('../../util/Hashing');
 const { logError } = require('../logs/LogsError.controller');
+
+exports.createAccountUser = async (req, res) => {
+    try {
+        const { firstName, lastName, email, password } = req.body;
+
+        if (!firstName || !lastName || !email || !password) {
+            throw new Error('Los datos no estan completos');
+        }
+
+        const existingUser = await UserModel.findOne({ where: { email } });
+        if (existingUser) {
+            throw new Error('El nombre de usuario ya está en uso');
+        }
+
+        const hashedPassword = await hashing(password);
+
+        await UserModel.create({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword
+        });
+
+        return response.success(req, res, 'Usuario creado exitosamente', 201);
+
+    } catch (err) {
+        const statusCode = err.status || 500;
+        await logError('createAccountUser', err.message, statusCode, err.stack);
+        return response.error(req, res, err.message || 'Ocurrio un error al intentar crear al usuario', statusCode);
+    }
+};
 
 exports.userAccountById = async (req, res) => {
     try {
@@ -29,7 +60,7 @@ exports.userAccountById = async (req, res) => {
     }
 };
 
-exports.updateUser = async (req, res) => {
+exports.updateAccountUser = async (req, res) => {
     try {
         const { id, firstName, lastName } = req.body;
 
@@ -53,12 +84,12 @@ exports.updateUser = async (req, res) => {
 
     } catch (err) {
         const statusCode = err.status || 500;
-        await logError('updateUser', err.message, statusCode, err.stack);
+        await logError('updateAccountUser', err.message, statusCode, err.stack);
         return response.error(req, res, err.message || 'Ocurrió un error en el servidor', statusCode);
     }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.deleteAccountUser = async (req, res) => {
     try {
         const { id} = req.body;
 
@@ -72,12 +103,12 @@ exports.deleteUser = async (req, res) => {
         }
 
         await Usuario.destroy({ where: { id } });
-        
+
         response.success(req, res, 'Usuario eliminado con éxito', 200);
 
     } catch (err) {
         const statusCode = err.status || 500;
-        await logError('updateUser', err.message, statusCode, err.stack);
+        await logError('deleteAccountUser', err.message, statusCode, err.stack);
         return response.error(req, res, err.message || 'Ocurrió un error en el servidor', statusCode);
     }
 };

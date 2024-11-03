@@ -2,7 +2,7 @@
 const UserModel = require('../model/UserAccountModel');
 const Role = require('../model/RolesModel');
 const { generateToken, tokenCreated, tokenUpdated } = require('../controllers/TokenController');
-const { hashing, comparePassword } = require('../../util/Hashing');
+const { comparePassword } = require('../../util/Hashing');
 const response = require('../../util/responses');
 const { logError } = require('../logs/LogsError.controller');
 
@@ -65,36 +65,5 @@ exports.logout = async (req, res) => {
         const statusCode = err.status || 500;
         await logError('logout', err.message, statusCode, err.stack);
         return response.error(req, res, err.message || 'Error al cerrar sesión en el metodo logout', statusCode);
-    }
-};
-
-exports.register = async (req, res) => {
-    try {
-        const { firstName, lastName, email, password } = req.body;
-
-        if (!firstName || !lastName || !email || !password) {
-            throw new Error('Los datos no estan completos');
-        }
-
-        const existingUser = await UserModel.findOne({ where: { email } });
-        if (existingUser) {
-            throw new Error('El nombre de usuario ya está en uso');
-        }
-
-        const hashedPassword = await hashing(password);
-
-        await UserModel.create({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword
-        });
-
-        return response.success(req, res, 'Usuario creado exitosamente', 201);
-
-    } catch (err) {
-        const statusCode = err.status || 500;
-        await logError('register', err.message, statusCode, err.stack);
-        return response.error(req, res, err.message || 'Ocurrio un error al intentar crear al usuario', statusCode);
     }
 };

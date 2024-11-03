@@ -4,6 +4,5 @@ const userAuthController = require('../core/guard/userAuthController');
 
 router.post('/signin', userAuthController.signin);
 router.post('/logout', userAuthController.logout);
-router.post('/register', userAuthController.register);
 
 module.exports = router;

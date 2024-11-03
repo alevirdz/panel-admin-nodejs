@@ -37,8 +37,6 @@ app.use('/api/recover-password', recoveryPasswordRoutes);
 
 
 
-
-
 //Middleware 
 app.use('/api/account', verifySesion, userAccountRoutes);
 
