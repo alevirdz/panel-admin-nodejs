@@ -42,7 +42,7 @@ exports.userAccountById = async (req, res) => {
             throw new Error('No se envió el campo: ID');
         }
 
-        const usuario = await Usuario.findOne({ 
+        const usuario = await UserModel.findOne({ 
             where: { id }, 
             attributes: {exclude: ['password']}
         });
@@ -68,7 +68,7 @@ exports.updateAccountUser = async (req, res) => {
             throw new Error('Faltan campos requeridos');
         }
 
-        const usuario = await Usuario.findByPk(id);
+        const usuario = await UserModel.findByPk(id);
 
         if (!usuario) {
             throw new Error('Usuario no encontrado');
@@ -78,7 +78,7 @@ exports.updateAccountUser = async (req, res) => {
         if (firstName) updateFields.firstName = firstName;
         if (lastName) updateFields.lastName = lastName;
 
-        await Usuario.update(updateFields, { where: { id } });
+        await UserModel.update(updateFields, { where: { id } });
 
         response.success(req, res, 'Datos del usuario actualizados exitosamente', 200);
 
@@ -97,12 +97,12 @@ exports.deleteAccountUser = async (req, res) => {
             throw new Error('No se envió el parámetro: ID');
         }
 
-        const usuario = await Usuario.findOne({ where: { id } });
+        const usuario = await UserModel.findOne({ where: { id } });
         if (!usuario) {
             throw new Error('Usuario no encontrado');
         }
 
-        await Usuario.destroy({ where: { id } });
+        await UserModel.destroy({ where: { id } });
 
         response.success(req, res, 'Usuario eliminado con éxito', 200);
 
@@ -115,7 +115,7 @@ exports.deleteAccountUser = async (req, res) => {
 
 exports.allAccounts = async (req, res) => {
     try {
-        const accounts = await Usuario.findAll({
+        const accounts = await UserModel.findAll({
             attributes: {exclude: ['password']}
         });
         return response.success(req, res, {accounts: accounts}, 200);

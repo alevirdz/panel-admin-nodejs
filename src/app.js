@@ -15,31 +15,26 @@ app.use(cors({
   credentials: true,
 }));
 
+//Callback System Controllers
+const userAuthAccountRoutes = require('./routes/Secure/UserAuthAccount.routes');
+const userAccountRoutes = require('./routes/Secure/UserAccount.routes');
+const userRecoveryPasswordRoutes = require('./routes/Secure/UserRecoveryPassword.routes');
 //Callback Controllers
-const authRoutes = require('./routes/auth.routes');
-const userAccountRoutes = require('./routes/UserAccount.routes');
 const userRoutes = require('./routes/user.routes');
 const productRoutes = require('./routes/product.routes');
 const galleryRoutes = require('./routes/gallery.routes');
 const reservationRoutes = require('./routes/reservation.routes');
-const recoveryPasswordRoutes = require('./routes/recoveryPassword.routes');
 
-//Public
-app.get('/info', (req, res) => {
-    res.json({ message: 'Consulta información que puede ser publica, img, text' });
-});
+//Public Middleware
+app.get('/info', (req, res) => { res.json({ message: 'Consulta información que puede ser publica, img, text' }); });
 app.use('/api/reservation', reservationRoutes);
 
+//Authentication Middleware
+app.use('/api/auth', userAuthAccountRoutes);
+app.use('/api/recover-password', userRecoveryPasswordRoutes);
 
-//Authentication
-app.use('/api/auth', authRoutes);
-app.use('/api/recover-password', recoveryPasswordRoutes);
-
-
-
-//Middleware 
+//App Middleware
 app.use('/api/account', verifySesion, userAccountRoutes);
-
 app.use('/api/usuario', verifySesion, userRoutes);
 // app.use('/api/productos', verifySesion, checkrol('Master'), productRoutes);
 app.use('/api/productos', verifySesion, productRoutes);
