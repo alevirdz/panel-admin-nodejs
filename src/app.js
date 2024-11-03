@@ -17,6 +17,7 @@ app.use(cors({
 
 //Callback Controllers
 const authRoutes = require('./routes/auth.routes');
+const userAccountRoutes = require('./routes/UserAccount.routes');
 const userRoutes = require('./routes/user.routes');
 const productRoutes = require('./routes/product.routes');
 const galleryRoutes = require('./routes/gallery.routes');
@@ -39,6 +40,8 @@ app.use('/api/recover-password', recoveryPasswordRoutes);
 
 
 //Middleware 
+app.use('/api/account', verifySesion, userAccountRoutes);
+
 app.use('/api/usuario', verifySesion, userRoutes);
 // app.use('/api/productos', verifySesion, checkrol('Master'), productRoutes);
 app.use('/api/productos', verifySesion, productRoutes);
