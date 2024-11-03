@@ -1,5 +1,5 @@
 
-const UserModel = require('../model/UserCreateAccountModel');
+const UserModel = require('../model/UserAccountModel');
 const Role = require('../model/RolesModel');
 const { generateToken, tokenCreated, tokenUpdated } = require('../controllers/TokenController');
 const { hashing, comparePassword } = require('../../util/Hashing');

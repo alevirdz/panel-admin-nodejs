@@ -1,6 +1,6 @@
-const UserModel = require('../../model/UserCreateAccountModel');
+const UserModel = require('../../model/UserAccountModel');
 const { sendEmail } = require('../../../util/SendEmail');
-const { generateToken, verifyToken } = require('../../controllers/TokenController');
+const { generateToken, decodeToken } = require('../../controllers/TokenController');
 const { hashing } = require('../../../util/Hashing');
 const path = require('path');
 const fs = require('fs/promises');
@@ -34,7 +34,6 @@ exports.resetPassword = async (token, newPassword) => {
         const hashedPassword = await hashing(newPassword);
         await UserModel.update({ password: hashedPassword }, { where: { id: decoded.id } });
    } catch (err) {
-    console.log(err)
         throw new Error(err);
    }
 };

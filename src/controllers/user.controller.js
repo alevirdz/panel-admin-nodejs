@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const response = require('../util/responses');
-const Usuario = require('../core/model/UserCreateAccountModel');
+const Usuario = require('../core/model/UserAccountModel');
 
 exports.getUser = async (req, res) => {
     try {

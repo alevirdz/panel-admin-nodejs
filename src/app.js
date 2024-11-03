@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require ('dotenv');
 const cors = require('cors');
-const verifyToken = require('./core/middleware/authMiddleware');
+const verifySesion = require('./core/middleware/authMiddleware');
 const checkrol = require('./core/middleware/checkRol');
 dotenv.config();
 
@@ -39,10 +39,10 @@ app.use('/api/recover-password', recoveryPasswordRoutes);
 
 
 //Middleware 
-app.use('/api/usuario', verifyToken, userRoutes);
-// app.use('/api/productos', verifyToken, checkrol('Master'), productRoutes);
-app.use('/api/productos', verifyToken, productRoutes);
-app.use('/api/gallery', verifyToken, galleryRoutes);
-app.use('/auth/reservation', verifyToken, reservationRoutes);
+app.use('/api/usuario', verifySesion, userRoutes);
+// app.use('/api/productos', verifySesion, checkrol('Master'), productRoutes);
+app.use('/api/productos', verifySesion, productRoutes);
+app.use('/api/gallery', verifySesion, galleryRoutes);
+app.use('/auth/reservation', verifySesion, reservationRoutes);
 
 module.exports = app;

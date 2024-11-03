@@ -1,29 +1,31 @@
-const jwt = require('jsonwebtoken');
-// const dotenv = require('dotenv');
-const RevokedToken = require('../model/UserTokenModel');
+const Token = require('../model/UserTokenModel');
+const { decodeToken } = require('../controllers/TokenController');
+const response = require('../../util/responses');
+const { logError } = require('../logs/LogsError.controller');
 
-// dotenv.config();
-
-const verifyToken = async (req, res, next) => {
+const verifySesion = async (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1];
     if (!token) {
-        return res.status(403).json({ message: 'Token no proporcionado' });
+        return response.success(req, res, 'Token no proporcionado', 401);
     }
 
     try {
-        const revokedToken = await RevokedToken.findOne({ where: { token, revoked: true } });
-        if (revokedToken) {
-            return res.status(401).json({ message: 'Token caducado' });
+
+        const isRevokedToken = await Token.findOne({ where: { token, revoked: true } });
+        if (isRevokedToken) {
+            return response.success(req, res, 'Token caducado', 401);
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = decodeToken(token);
         req.user = decoded;
         next();
+
     } catch (err) {
-        console.error('Error en la verificación del token:', err);
-        return res.status(401).json({ message: 'Token inválido' });
+        const statusCode = err.status || 500;
+        await logError('verifySesion', err.message, statusCode, err.stack);
+        return response.error(req, res, err.message || 'Ocurrió un error en el servidor', statusCode);
     }
 };
 
 
-module.exports = verifyToken;
+module.exports = verifySesion;

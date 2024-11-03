@@ -3,7 +3,6 @@ const Token = require('../model/UserTokenModel');
 
 
 const generateToken = (payload, expiresIn = process.env.JWT_EXPIRATION) => {
-    console.log(expiresIn)
     const token = jwt.sign(
         payload,
         process.env.JWT_SECRET,
@@ -25,7 +24,7 @@ const tokenCreated = async (userId, token) => {
         throw new Error('Ocurrió un problema al crear el token');
     }
 };
-
+//Token revokado
 const tokenUpdated = async (token) => {
     try {
         await Token.update(
@@ -37,7 +36,7 @@ const tokenUpdated = async (token) => {
     }
 };
 
-const verifyToken = (token) => {
+const decodeToken = (token) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         return decoded;
@@ -46,4 +45,4 @@ const verifyToken = (token) => {
     }
 };
 
-module.exports = { generateToken, tokenCreated, tokenUpdated, verifyToken };
+module.exports = { generateToken, tokenCreated, tokenUpdated, decodeToken };

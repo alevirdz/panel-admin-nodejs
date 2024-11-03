@@ -1,5 +1,5 @@
 const response = require('../../util/responses');
-const Account = require('../model/UserCreateAccountModel');
+const Account = require('../model/UserAccountModel');
 const Role = require('../model/RolesModel');
 const Permission = require('../model/PermissionModel');
 const RolePermission = require('../model/UserRolePermissionModel');
