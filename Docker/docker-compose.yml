@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db_zero:
+    image: mysql:latest
+    container_name: MYSQL_Container
+    environment:
+      MYSQL_ROOT_PASSWORD: root_
+      MYSQL_DATABASE: app
+      MYSQL_USER: admin
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql  # Enlace la carpeta local 'data/mysql' con el contenedor
+
+volumes:
+  db_data:
