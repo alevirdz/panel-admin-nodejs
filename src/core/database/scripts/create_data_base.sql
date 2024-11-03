@@ -14,6 +14,7 @@ CREATE DATABASE IF NOT EXISTS app
 -- Using the database
 -- --------------------------------------------------------
 USE app;
+SET time_zone = 'America/Mexico_City';
 
 -- --------------------------------------------------------
 -- Creating table `accounts`
