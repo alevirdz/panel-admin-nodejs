@@ -1,9 +1,7 @@
 const bcrypt = require('bcrypt');
-const dotenv = require ('dotenv');
 const jwt = require('jsonwebtoken');
 const response = require('../util/responses');
 const Usuario = require('../core/model/UserCreateAccountModel');
-dotenv.config();
 
 exports.getUser = async (req, res) => {
     try {

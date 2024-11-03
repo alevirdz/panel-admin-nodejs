@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 const Token = require('../model/UserTokenModel');
-// const dotenv = require ('dotenv');
-// dotenv.config();
 
-const generateToken = (payload) => {
+
+const generateToken = (payload, expiresIn = process.env.JWT_EXPIRATION) => {
+    console.log(expiresIn)
     const token = jwt.sign(
         payload,
         process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRATION }
+        { expiresIn:  expiresIn}
     );
 
     return token;
@@ -37,4 +37,13 @@ const tokenUpdated = async (token) => {
     }
 };
 
-module.exports = { generateToken, tokenCreated, tokenUpdated };
+const verifyToken = (token) => {
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return decoded;
+    } catch (err) {
+        throw new Error('Token inválido o expirado');
+    }
+};
+
+module.exports = { generateToken, tokenCreated, tokenUpdated, verifyToken };

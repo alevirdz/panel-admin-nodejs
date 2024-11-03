@@ -3,7 +3,6 @@ const dotenv = require ('dotenv');
 const cors = require('cors');
 const verifyToken = require('./core/middleware/authMiddleware');
 const checkrol = require('./core/middleware/checkRol');
-const PasswordRecoveryController = require('./core/controllers/PasswordRecoveryController');
 dotenv.config();
 
 
@@ -22,8 +21,9 @@ const userRoutes = require('./routes/user.routes');
 const productRoutes = require('./routes/product.routes');
 const galleryRoutes = require('./routes/gallery.routes');
 const reservationRoutes = require('./routes/reservation.routes');
+const recoveryPasswordRoutes = require('./routes/recoveryPassword.routes');
 
-// Without Auth
+//Public
 app.get('/info', (req, res) => {
     res.json({ message: 'Consulta información que puede ser publica, img, text' });
 });
@@ -32,7 +32,7 @@ app.use('/api/reservation', reservationRoutes);
 
 //Authentication
 app.use('/api/auth', authRoutes);
-app.use('/api/recover-password', authRoutes);
+app.use('/api/recover-password', recoveryPasswordRoutes);
 
 
 

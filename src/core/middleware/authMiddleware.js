@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
 const RevokedToken = require('../model/UserTokenModel');
 
-dotenv.config();
+// dotenv.config();
 
 const verifyToken = async (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1];
