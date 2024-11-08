@@ -5,7 +5,7 @@ const verifySesion = require('../../core/middleware/authMiddleware');
 
 
 router.post('/', PasswordRecoveryController.generateRecoveryLink);
-router.post('/resetPasswordByLink', PasswordRecoveryController.resetPasswordByLink);
+router.post('/reset-password-by-link', PasswordRecoveryController.resetPasswordByLink);
 router.post('/resetPassword', verifySesion, PasswordRecoveryController.resetPassword);
 
 module.exports = router;

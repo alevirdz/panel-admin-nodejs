@@ -8,21 +8,21 @@ const { logError } = require('../logs/LogsError.controller');
 exports.generateRecoveryLink = async (req, res) => {
     const { email } = req.body;
     try {
-        await PasswordRecoveryService.sendRecoveryEmail(email);
-        return res.status(200).json({ message: 'Email de recuperación enviado' });
+        const result = await PasswordRecoveryService.sendRecoveryEmail(email);
+        return response.success(req, res, result.message, 200);
     } catch (err) {
         const statusCode = err.status || 500;
         await logError('generateRecoveryLink', err.message, statusCode, err.stack);
-        return response.error(req, res, err.message || 'Ocurrió un error en el servidor', statusCode);
+        return response.error(req, res, err.message || 'Ocurrió un error al procesar la solicitud', statusCode);
     }
 };
 
 exports.resetPasswordByLink = async (req, res) => {
-    const { token, newPassword } = req.body;
-    
+    const { token, resetPassword } = req.body;
+
     try {
-        await PasswordRecoveryService.resetPassword(token, newPassword);
-        return res.status(200).json({ message: 'Contraseña restablecida con éxito' });
+        await PasswordRecoveryService.resetPassword(token, resetPassword);
+        return response.success(req, res, 'Contraseña restablecida con éxito', 200);
     } catch (err) {
         const statusCode = err.status || 500;
         await logError('resetPasswordByLink', err.message, statusCode, err.stack);

@@ -178,7 +178,7 @@ INSERT INTO themes (name, background, colorText, colorIco, hoverBackground, back
 CREATE TABLE logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     method VARCHAR(255) NOT NULL,
-    message VARCHAR(255) NOT NULL,
+    message TEXT,
     statusCode INT NOT NULL,
     stackTrace TEXT,
     createdAt DATETIME NOT NULL
