@@ -152,6 +152,18 @@ CREATE TABLE IF NOT EXISTS `token` (
   DEFAULT CHARSET=utf8mb4 
   COLLATE=utf8mb4_general_ci;
 
+-- Token to password
+CREATE TABLE IF NOT EXISTS `token_passwords` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `token` VARCHAR(255) NOT NULL,
+  `isRevoked` BOOLEAN DEFAULT FALSE,
+  `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `revokedAt` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB 
+DEFAULT CHARSET=utf8mb4 
+COLLATE=utf8mb4_general_ci;
+
 
 -- Themes
 CREATE TABLE themes (

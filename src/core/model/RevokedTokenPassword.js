@@ -1,27 +1,18 @@
 const { DataTypes } = require('sequelize');
 const connection = require('../database/mysql');
 
-const RevokedTokenSession = connection.define('RevokedToken', {
+const RevokedTokenPassword = connection.define('RevokedTokenPassword', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'accounts',
-            key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
     },
     token: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
     },
-    revoked: {
+    isRevoked: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
@@ -34,8 +25,8 @@ const RevokedTokenSession = connection.define('RevokedToken', {
         allowNull: true,
     },
 }, {
-    tableName: 'token',
+    tableName: 'token_passwords',
     timestamps: false,
 });
 
-module.exports = RevokedTokenSession;
+module.exports = RevokedTokenPassword;

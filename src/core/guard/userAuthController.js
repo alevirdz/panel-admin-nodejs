@@ -2,7 +2,7 @@
 const UserModel = require('../model/UserAccountModel');
 const Role = require('../model/RolesModel');
 const { generateToken, tokenCreated, tokenUpdated } = require('../controllers/TokenController');
-const { comparePassword } = require('../../util/Hashing');
+const { comparePassword } = require('../../util/PasswordHasher');
 const response = require('../../util/responses');
 const { logError } = require('../logs/LogsError.controller');
 
@@ -24,6 +24,10 @@ exports.signin = async (req, res) => {
             }],
         });
 
+        if(authenticatedUser === null){
+            throw new Error('El usuario no existe');
+        }
+
         const isPasswordValid = await comparePassword(password, authenticatedUser.password);
         if (!isPasswordValid) {
             throw new Error('Usuario o contraseña inválido');
@@ -40,14 +44,15 @@ exports.signin = async (req, res) => {
         const token = generateToken(payload);
 
         await tokenCreated(authenticatedUser.id, token);
-        return response.success(req, res, { token: token }, 200);
+        return response.success(req, res, { token }, 200);
 
     } catch (err) {
-        const statusCode = err.status || 500;
-        await logError('signin', err.message, statusCode, err.stack);
+        const statusCode = err.status;
+        await logError('signin', err.message, statusCode || 500, err.stack);
         return response.error(req, res, err.message || 'Ocurrió un error en el servidor', statusCode);
     }
 };
+
 
 exports.logout = async (req, res) => {
 
@@ -62,7 +67,7 @@ exports.logout = async (req, res) => {
 
         return response.success(req, res, 'OK', 200);
     } catch (err) {
-        const statusCode = err.status || 500;
+        const statusCode = err.status;
         await logError('logout', err.message, statusCode, err.stack);
         return response.error(req, res, err.message || 'Error al cerrar sesión en el metodo logout', statusCode);
     }

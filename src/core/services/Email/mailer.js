@@ -1,7 +1,8 @@
 const UserModel = require('../../model/UserAccountModel');
+const RevokedTokenPassword = require('../../model/RevokedTokenPassword');
 const { sendEmail } = require('../../../util/SendEmail');
-const { generateToken, decodeToken } = require('../../controllers/TokenController');
-const { hashing } = require('../../../util/Hashing');
+const { encrypt, decrypt } = require('../../../util/EndToEndHashGenerator');
+const { hashing } = require('../../../util/PasswordHasher');
 const path = require('path');
 const fs = require('fs/promises');
 const { logError } = require('../../logs/LogsError.controller');
@@ -14,8 +15,12 @@ exports.sendRecoveryEmail = async (email) => {
             throw new Error('El usuario no existe');
         }
 
-        //Mejorar la seguridad aqui!
-        const token = generateToken({ id: user.id }, process.env.JWT_EXPIRATION_RECOVERY_PASSWORD);
+        const token = encrypt(user.id);
+      await RevokedTokenPassword.create({
+        token
+       })
+       
+
         const recoveryLink = `http://localhost:3000/reset-password?token=${token}`;
 
         //Podemos crear un controlador solo para pasarle parametros
@@ -41,10 +46,24 @@ exports.sendRecoveryEmail = async (email) => {
 
 exports.resetPassword = async (token, newPassword) => {
     try {
-        const decoded = decodeToken(token);
-        const hashedPassword = await hashing(newPassword);
-        await UserModel.update({ password: hashedPassword }, { where: { id: decoded.id } });
+
+        const {isRevoked} = await RevokedTokenPassword.findOne({
+            attributes: ['isRevoked'],
+            where: { token },
+        });
+
+        if (!isRevoked) {
+            const decoded = decrypt(token);
+            const hashedPassword = await hashing(newPassword);
+            await UserModel.update({ password: hashedPassword }, { where: { id: decoded } });
+            await RevokedTokenPassword.update({ isRevoked: true, revokedAt: new Date() }, { where: { token } });
+            
+        }else {
+            throw new Error('Este token ha sido revocado');
+        }
+
     } catch (err) {
         throw new Error(err);
     }
 };
+

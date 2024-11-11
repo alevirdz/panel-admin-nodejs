@@ -1,6 +1,6 @@
 const UserModel = require('../model/UserAccountModel');
 const response = require('../../util/responses');
-const { hashing } = require('../../util/Hashing');
+const { hashing } = require('../../util/PasswordHasher');
 const { logError } = require('../logs/LogsError.controller');
 
 exports.createAccountUser = async (req, res) => {

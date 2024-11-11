@@ -2,7 +2,7 @@ const PasswordRecoveryService = require('../services/Email/mailer');
 const UserModel = require('../model/UserAccountModel');
 const { decodeToken } = require('../controllers/TokenController');
 const response = require('../../util/responses');
-const { hashing, comparePassword } = require('../../util/Hashing');
+const { hashing, comparePassword } = require('../../util/PasswordHasher');
 const { logError } = require('../logs/LogsError.controller');
 
 exports.generateRecoveryLink = async (req, res) => {
