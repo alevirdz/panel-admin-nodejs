@@ -38,7 +38,7 @@ exports.sendRecoveryEmail = async (email) => {
         const statusCode = err.status || 500;
         await logError('sendRecoveryEmail', err.message, statusCode, err.stack);
         throw {
-            message: err.message || 'Ocurrió un error al enviar el correo.',
+            message: err.message || 'Ocurrió un error al enviar el correo',
             status: statusCode,
         };
     }

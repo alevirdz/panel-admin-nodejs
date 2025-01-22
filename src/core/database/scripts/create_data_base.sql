@@ -27,10 +27,13 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `password` VARCHAR(255) NOT NULL,
   `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  `selected_theme_id` INT(11),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_selected_theme_id` FOREIGN KEY (`selected_theme_id`) REFERENCES `themes`(`id`)
 ) ENGINE=InnoDB 
   DEFAULT CHARSET=utf8mb4 
   COLLATE=utf8mb4_general_ci;
+
 
 -- --------------------------------------------------------
 -- Creating table `roles`

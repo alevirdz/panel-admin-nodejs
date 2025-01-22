@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const connection = require('../database/mysql');
 const Role = require('../model/RolesModel');
+const Themes = require('../model/ThemesModel');
 
 const Usuario = connection.define('accounts', {
     firstName: {
@@ -20,6 +21,14 @@ const Usuario = connection.define('accounts', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    selected_theme_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'Themes',
+            key: 'id',
+        },
+    },
 }, {
     timestamps: true,
 });
@@ -30,6 +39,12 @@ Usuario.belongsToMany(Role, {
     foreignKey: 'user_id',
     otherKey: 'role_id',
     timestamps: false,
+});
+Usuario.belongsTo(Themes, {
+    foreignKey: 'selected_theme_id',
+    as: 'selectedTheme',
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
 });
 
 module.exports = Usuario;

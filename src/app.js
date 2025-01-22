@@ -20,6 +20,7 @@ app.use(cors({
 const userAuthAccountRoutes = require('./routes/Secure/UserAuthAccount.routes');
 const userAccountRoutes = require('./routes/Secure/UserAccount.routes');
 const userRecoveryPasswordRoutes = require('./routes/Secure/UserRecoveryPassword.routes');
+const userThemesRoutes = require('./routes/Secure/UserThemes.routes');
 //Callback Controllers
 const userRoutes = require('./routes/user.routes');
 const productRoutes = require('./routes/product.routes');
@@ -41,5 +42,6 @@ app.use('/api/usuario', verifySesion, userRoutes);
 app.use('/api/productos', verifySesion, productRoutes);
 app.use('/api/gallery', verifySesion, galleryRoutes);
 app.use('/auth/reservation', verifySesion, reservationRoutes);
+app.use('/api/theme', verifySesion, userThemesRoutes);
 
 module.exports = app;
